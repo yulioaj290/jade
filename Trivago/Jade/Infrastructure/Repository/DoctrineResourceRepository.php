@@ -142,9 +142,9 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
                 $result = array_filter($result, function ($entityRow) use ($filter) {
                     $getFunction = "get" . ucfirst($filter->getPath()->getColumnName());
                     if ($filter->getType() === ExpressionFilterTypes::ARRAY_CONTAINS) {
-                        return in_array($filter->getValue(), $entityRow->$getFunction());
+                        return in_array($filter->getValue(), $entityRow->$getFunction(), true);
                     } elseif ($filter->getType() === ExpressionFilterTypes::ARRAY_NOT_CONTAINS) {
-                        return !in_array($filter->getValue(), $entityRow->$getFunction());
+                        return !in_array($filter->getValue(), $entityRow->$getFunction(), true);
                     }
                 });
             }
