@@ -21,7 +21,6 @@
 
 namespace Trivago\Jade\Infrastructure\Repository;
 
-use DevJadeBundle\Form\DataTransformer\ArrayToDelimitedStringTransformer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
@@ -130,7 +129,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
         $idsConstraint = new Constraint();
         $idsConstraint->setPerPage(PHP_INT_MAX);
         $idBasedQueryBuilder = $this->createQuery($prefix, $relationships, $idsConstraint, $sortCollection);
-        $idBasedQueryBuilder->where($prefix . '.id IN (:ids)')->setParameters(['ids' => $ids]);
+        $idBasedQueryBuilder->where($prefix.'.id IN (:ids)')->setParameters(['ids' => $ids]);
 
         $result = $idBasedQueryBuilder->getQuery()->execute();
 
@@ -177,10 +176,10 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
         $queryBuilder = $this->doctrineRepository
             ->createQueryBuilder($prefix);
         self::addRelationships($queryBuilder, $prefix, $relationships);
-        $queryBuilder->select($queryBuilder->expr()->countDistinct($prefix . '.id'));
+        $queryBuilder->select($queryBuilder->expr()->countDistinct($prefix.'.id'));
         $this->addFilters($queryBuilder, $filterCollection);
 
-        return (int)$queryBuilder
+        return (int) $queryBuilder
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -200,7 +199,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
                 $relationshipChain[] = $subRelationship;
                 $newFullAlias = self::buildAlias($alias, $relationshipChain);
                 if (!in_array($newFullAlias, $addedRelationships)) {
-                    $queryBuilder->leftJoin($fullAlias . '.' . $subRelationship, $newFullAlias);
+                    $queryBuilder->leftJoin($fullAlias.'.'.$subRelationship, $newFullAlias);
                     $queryBuilder->addSelect($newFullAlias);
                     $addedRelationships[] = $newFullAlias;
                 }
@@ -218,7 +217,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
     {
         $separator = count($relationshipChain) ? '_' : '';
 
-        return $rootAlias . $separator . implode('__', $relationshipChain);
+        return $rootAlias.$separator.implode('__', $relationshipChain);
     }
 
     /**
@@ -235,7 +234,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
         self::addRelationships($queryBuilder, $prefix, $relationships);
 
         $queryBuilder->setMaxResults($constraint->getPerPage());
-        $queryBuilder->setFirstResult(($constraint->getPageNumber() - 1) * $constraint->getPerPage());
+        $queryBuilder->setFirstResult(($constraint->getPageNumber()-1)*$constraint->getPerPage());
 
         $this->addFilters($queryBuilder, $constraint->getFilterCollection());
 
@@ -285,7 +284,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
                 $filter->getType() !== ExpressionFilterTypes::ARRAY_NOT_CONTAINS
             ) {
                 if ($filter instanceof CompositeFilter) {
-                    $expressions[] = $this->createFilterExpressions($queryBuilder, $filter, $baseKey . $key . '_');
+                    $expressions[] = $this->createFilterExpressions($queryBuilder, $filter, $baseKey.$key.'_');
                     continue;
                 }
                 /** @var ExpressionFilter $filter */
@@ -315,12 +314,12 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
                 }
 
                 if (!$isNullComparison) {
-                    $queryBuilder->setParameter($baseKey . $key, $value);
+                    $queryBuilder->setParameter($baseKey.$key, $value);
                 }
             }
         }
 
-        return '(' . implode(' ' . strtoupper($compositeFilter->getType()) . ' ', $expressions) . ')';
+        return '('.implode(' '.strtoupper($compositeFilter->getType()).' ', $expressions).')';
     }
 
     private function joinAliasAndColumnName($alias, $columnName)
@@ -328,7 +327,7 @@ class DoctrineResourceRepository implements ResourceRepository, ResourceCounter
         $this->validateIdentifier($alias);
         $this->validateIdentifier($columnName);
 
-        return $alias . '.' . $columnName;
+        return $alias.'.'.$columnName;
     }
 
     private function validateIdentifier($string)
