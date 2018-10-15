@@ -1,4 +1,4 @@
-# Copyright (c) 2017 trivago
+# Copyright (c) 2017-present trivago GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# @author Moein Akbarof <moein.akbarof@trivago.com>
-# @date 2017-09-10
 
 NAME=application
 export SYMFONY_ENV=test
@@ -36,6 +33,7 @@ echo "Installing the jade library"
 curl -LsS https://getcomposer.org/composer.phar -o ./composer
 chmod a+x ./composer
 ./composer require trivago/jade
+./composer require webmozart/assert
 ./composer require "codeception/codeception" --dev
 echo "Symlinking jade to the parent repository."
 rm -rf vendor/trivago/jade
